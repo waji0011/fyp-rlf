@@ -1,0 +1,171 @@
+{% extends "users/base.html" %}
+{% block title %} Contact Us {% endblock title%}
+{% block content %}
+<style>
+  .contact-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .contact-wrap h3 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  .contact-wrap .form-group label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  .contact-wrap .form-control {
+    height: 48px;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #555;
+    background-color: #fff;
+    transition: border-color 0.3s ease-in-out;
+  }
+  .contact-wrap .form-group input.form-control,
+.contact-wrap .form-group select.form-control ,.contact-wrap .form-group textarea.form-control{
+  height: 45px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #555;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0;
+  background: transparent;
+  color: #555;
+}
+  .contact-wrap .form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #4da6ff;
+  }
+  .contact-wrap .form-group .submitting {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    text-align: center;
+    display: none;
+  }
+  .contact-wrap .btn-primary {
+    height: 48px;
+    border-radius: 5px;
+    border: none;
+    padding: 0 30px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    background-color: rgb(74, 160, 57);
+    transition: background-color 0.3s ease-in-out;
+  }
+  .contact-wrap .btn-primary:hover {
+    background-color: rgb(93 199 72);
+  }
+</style>
+
+</div>
+  <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <h2 style="font-weight: 900;font-size: 4rem;color: #1e660c">Contact Us</h2><br>
+              <div id="form-message-warning" class="mb-4"></div> 
+              <div id="form-message-success" class="mb-4">
+                {{n}}
+          </div>
+
+      </div>
+      <div class="row">
+          <div class="col-md-5">
+              <h2 style="font-weight: 750;font-size: 2rem;color: #1e660c">Send your Query</h2><br>
+              <form method="POST" action="{% url 'contactus'%}" id="contactForm" name="contactForm" class="contactForm">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="label" for="name">Full Name</label>
+                      <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6"> 
+                    <div class="form-group">
+                      <label class="label" for="email">Email Address</label>
+                      <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="label" for="subject">Subject</label>
+                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" >
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label class="label" for="#">Message</label>
+                      <textarea name="message" class="form-control" id="message" cols="30" rows="4" placeholder="Message" required></textarea>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <input type="submit" value="Send Message" class="btn btn-primary" >
+                      <div class="submitting"></div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="col-md-2"></div>
+
+          <div class="col-md-5">
+
+              <h2 style="font-weight: 750;font-size: 2rem;color: #1e660c">Get In Touch</h2><br>
+              <p><b>Reach Us</b></p>
+              <table class="contact-info">
+                  <tr>
+                      <td>
+                          <i class="fa fa-map-marker"></i>
+                      </td>
+                      <td class="pl-10">
+                          RLF Comsats Wah
+                      </td>
+                  </tr>
+                  <tr>
+                      <td class="pt-8">
+                          <i class="fa fa-envelope"></i>
+                      </td>
+                      <td class="pl-10 pt-8">
+                        roadlicesefacility@gmail.com
+                      </td>
+                  </tr>
+                  <tr>
+                      <td class="pt-8">
+                          <i class="fa fa-phone"></i>
+                      </td>
+                      <td class="pl-10 pt-8">
+                          +92 311-2233445
+                      </td>
+                  </tr>
+              </table>
+
+          </div>
+
+      </div>
+
+      <div class="row">
+          <div class="mt-60 text-center" style="width: 1112px;">
+              <div>
+                  <h1 class="map-heading"><b>Find Us On Map</b></h1>
+              </div>
+              <iframe class="gmap_iframe" width="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=660&amp;height=416&amp;hl=en&amp;q=comsats university islamabad wah campus&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><style>.mapouter{position:relative;text-align:right;width:100%;height:416px;}.gmap_canvas {overflow:hidden;background:none!important;width:100%;height:416px;}.gmap_iframe {height:416px!important;}</style>
+            </div>
+      </div>
+  </div>
+</section>
+
+</div>
+
+{% endblock content %}

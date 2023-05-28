@@ -1,0 +1,65 @@
+{% extends "users/base.html" %}
+
+{% block title %} challan_detail {% endblock title%}
+
+{% block content %}
+<style>
+  .center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    text-align: center;
+  }
+
+  /* Style for the content section */
+  .content-section {
+    background-color: white;
+    border: 1px solid #33b734;
+    border-radius: 36px;
+    padding: 20px;
+    max-width: 600px;}
+
+  .content-section h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .content-section p {
+    margin-bottom: 20px;
+  }
+
+  .content-section a.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #33b734;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+</style>
+<div class="center-align">
+  <div class="content-section">
+    <br>
+    {% if challan.verified %}
+    <p>Your bank challan has been verified by the admin.</p><br>
+    <a href="{% url 'generate_pdf' %}" class="btn btn-primary">Download Learner</a>
+    {% if remaining_days < 0 %}
+      <br>
+      <p>You are now eligible for The License</p>
+      <div><b><a href="{% url 'video' %}" class="nav-item nav-link">Click Here To Apply For License</a></b></div>
+    {% else %}
+      <p>Please wait for {{ remaining_days }} day{% if remaining_days != 1 %}s{% endif %}, {{ remaining_hours }} hour{% if remaining_hours != 1 %}s{% endif %}, and {{ remaining_minutes }} minute{% if remaining_minutes != 1 %}s{% endif %} to be eligible for the License.</p>
+    {% endif %}
+    <br>
+  {% elif challan and not challan.rejected %}
+    <p>Your bank challan is still being verified. Please check back later.
+  {% else %}
+    <p>The challan has been rejected.
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

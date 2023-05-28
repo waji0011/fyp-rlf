@@ -1,0 +1,28 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>CNIC</th>
+        <th>Date of Birth</th>
+        <th>Height</th>
+        <th>Gender</th>
+        <th>Bloodgroup</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in user_data %}
+      <tr>
+        <td>{{ user.Fullname }}</td>
+        <td>{{ user.CNIC }}</td>
+        <td>{{ user.DOB }}</td>
+        <td>{{ user.Height }}</td>
+        <td>{{ user.Gender }}</td>
+        <td>{{ user.Bloodgroup }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

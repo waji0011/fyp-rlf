@@ -1,0 +1,57 @@
+
+{% block content %}
+<style>
+  .center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    text-align: center;
+  }
+
+  /* Style for the content section */
+  .content-section {
+    background-color: white;
+    border: 1px solid #33b734;
+    border-radius: 50px;
+    padding: 40px;
+    max-width: 600px;
+  }
+
+  .content-section h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .content-section p {
+    margin-bottom: 20px;
+  }
+
+  .content-section a.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #33b734;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+</style>
+<body>
+  <div class="center-align">
+    <div class="content-section">
+      {% if user.profile.has_submitted_challan %}
+        <h3>Your Challan is Submitted</h3>
+        <a class="btn btn-primary btn-lg" href="{% url 'challan_detail' %}">Click Here To Download Your Learner</a>
+      {% else %}
+        <p>No challan uploaded yet.</p>
+        <a href="{% url 'upload_challan' %}">Upload a challan</a>
+      {% endif %}
+    </div>
+  </div> 
+</body>
+{% endblock %}
+
+

@@ -1,0 +1,48 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<style>
+  .center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    text-align: center;
+  }
+
+  /* Style for the content section */
+  .content-section {
+    background-color: white;
+    border: 1px solid #33b734;
+    border-radius: 50px;
+    padding: 30px;
+    max-width: 620px;
+  }
+</style>
+
+<div class="center-align">
+  <div class="content-section">
+  <h2>Renew License</h2>
+  {% if profile.learner_expire %}
+    {% if profile.learner_expire >= today %}
+      <p>Your license is valid until {{ profile.learner_expire }}</p>
+    {% else %}
+      <p>Your license has expired</p>
+      <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Renew License">
+      </form>
+      <p>Your license has been renewed for 10 days</p>
+    {% endif %}
+  {% else %}
+    <p>You don't have a license yet</p>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+

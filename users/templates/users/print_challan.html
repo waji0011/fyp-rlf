@@ -1,0 +1,14 @@
+{% extends "users/base.html" %}
+{% block title %} Challan {% endblock title%}
+{% block content %}
+  <div class="col-md-7">
+    <div class="contact-wrap w-100 p-md-5 p-4">
+      <h3 class="mb-4">Challan </h3>
+      <div id="form-message-warning" class="mb-4"></div> 
+      <div id="form-message-success" class="mb-4">
+        Please click the button below to download/print the challan.
+      </div>
+      <a href="{{ pdf_url }}" target="_blank" class="btn btn-primary">Print it</a>
+    </div>
+  </div>
+{% endblock content %}

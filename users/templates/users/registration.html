@@ -1,0 +1,268 @@
+{% extends "users/base.html" %}
+{% block title %} Registration {% endblock title%}
+{% block content %}
+<style>
+  /* Form Styles */
+  
+  .registration .form-group input[type="submit"] {
+    background-color: rgb(74, 160, 57);
+    color: #fff;
+    border: none;
+    padding: 10px 40px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .registration .form-group input[type="submit"]:hover {
+    background-color: rgb(93 199 72);
+  }
+  
+  .registration .form-group input[type="submit"]:focus {
+    outline: none;
+  }
+  
+  .registration .form-group .submitting {
+    display: none;
+  }
+  
+  .registration .form-group .has-warning .form-control {
+    border-color: #F6BB42;
+  }
+  
+  .registration .form-group .has-warning .form-control:focus {
+    border-color: #F6BB42;
+    box-shadow: none;
+  }
+  
+  .registration .form-group .has-success .form-control {
+    border-color: #18BC9C;
+  }
+  
+  .registration .form-group .has-success .form-control:focus {
+    border-color: #18BC9C;
+    box-shadow: none;
+  }
+  
+  .registration .form-group .has-danger .form-control {
+    border-color: #E74C3C;
+  }
+  
+  .registration .form-group .has-danger .form-control:focus {
+    border-color: #E74C3C;
+    box-shadow: none;
+  }
+  
+  .registration .form-group label {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #333;
+    margin-bottom: 15px;
+    display: block;
+  }
+  .registration .form-group input.form-control,
+.registration .form-group select.form-control {
+  height: 45px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid #555;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0;
+  background: transparent;
+  color: #555;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+.registration .form-group input.form-control:focus,
+.registration .form-group select.form-control:focus {
+  box-shadow: none;
+  outline: none;
+  border-color: #4d90fe;
+}
+
+.registration .form-group .submitting {
+  position: absolute;
+  top: 50%;
+  right: 5px;
+  transform: translateY(-50%);
+  display: none;
+}
+
+.registration .form-group .submitting::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgb(93 199 72);
+  display: inline-block;
+  -webkit-animation: pulsate 1s ease-out;
+  animation: pulsate 1s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  opacity: 0.5;
+  margin-right: 5px;
+}
+
+</style>
+<script>
+  // Get the form element
+const form = document.getElementById('registration');
+
+// Add a submit event listener to the form
+form.addEventListener('submit', function(event) {
+  // Get the value of the date of birth input
+  const dobInput = document.getElementById('dob');
+  const dob = new Date(dobInput.value);
+
+  // Calculate the user's age
+  const ageInMilliseconds = Date.now() - dob.getTime();
+  const ageInYears = ageInMilliseconds / 1000 / 60 / 60 / 24 / 365.25;
+
+  // Check if the user is at least 18 years old
+  if (ageInYears < 18) {
+    // If the user is not 18 years old, prevent the form from being submitted
+    event.preventDefault();
+
+    // Show an error message
+    alert('You must be at least 18 years old to submit this form.');
+  }
+});
+</script>
+
+
+  <div class="col-md-20">
+    <div class="contact-wrap w-100 p-md-5 p-4">
+      {% if profile.has_submitted_registration_form %}
+      {% if not user.profile.has_submitted_challan %}
+      {% if request.user.is_authenticated %}
+      <h3 class="mb-4">Registration Form Submitted</h3>
+      <a href="{% url 'download_pdf' %}" class="btn btn-primary">Download Challan</a>
+      {% endif %}
+      {% endif %}
+      {% include 'users/challan.html' %}
+      <div id="form-message-success" class="mb-4">
+        {{ request.session.success_message }}
+      </div>
+      {% else %}
+      {% if error_message %}
+          <div class="alert alert-danger">{{ error_message }}</div>
+      {% endif %}
+      <h3 class="mb-4" >Apply For License </h3>
+        
+      <div id="form-message-warning" class="mb-4"></div> 
+      <form method="POST" action="{% url 'registration'%}" id="registration" name="registration" class="registration" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" class="form-control" name="id2" id2="id2"  value= {{profile.id}}>
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="name">Full Name</label>
+              <input type="text" class="form-control" name="name" id="name" placeholder="Full Name" required value="{{ name }}">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="name">Father Name</label>
+              <input type="text" class="form-control" name="fname" id="fname" placeholder="Father Name" required value="{{ fname }}">
+            </div>
+          </div>
+          <div class="col-md-8"> 
+            <div class="form-group">
+              <label class="label" for="cnic">CNIC</label>
+              <input type="text" class="form-control" name="cnic" id="cnic" placeholder="00000-0000000-0"  required value="{{ cnic }}">
+            </div>
+          </div>
+          <div class="col-md-8"> 
+            <div class="form-group">
+              <label class="label" for="dob">Date of Birth</label>
+              <input type="date" class="form-control" name="dob" id="dob" placeholder="Date of Birth" required value="{{ dob }}">
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="height">Height</label>
+              <div class="input-group">
+                <input type="number" class="form-control" name="feet" placeholder="Feet" min="0" required value="{{ feet }}">
+                <div class="input-group-prepend input-group-append">
+                  <div class="input-group-text">feet</div>
+                </div>&nbsp;&nbsp;
+                <input type="number" class="form-control" name="inches" placeholder="Inches" min="0" max="11" required value="{{ inches }}">
+                <div class="input-group-prepend input-group-append">
+                  <div class="input-group-text">inches</div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="gender">Gender</label>
+              <select id="gender" name="gender" class="form-control" id="gender" required value="{{ gender }}" > 
+                <option value=""> </option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="bloodgroup">Blood Group</label>
+              <select id="bloodgroup" name="bloodgroup" class="form-control" id="bloodgroup" required value="{{ bloodgroup }}">
+                <option value=""> </option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="address">Address</label>
+              <textarea class="form-control" name="address" id="address" rows="3" required>{{ address }}</textarea>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="profile_picture">Profile Picture</label>
+              <input type="file" class="form-control" name="profile_picture" id="profile_picture" accept="image/*" required>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="front_cnic_picture">Front CNIC Picture</label>
+              <input type="file" class="form-control" name="front_cnic_picture" id="front_cnic_picture" accept="image/*" required>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-group">
+              <label class="label" for="back_cnic_picture">Back CNIC Picture</label>
+              <input type="file" class="form-control" name="back_cnic_picture" id="back_cnic_picture" accept="image/*" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <input type="submit" value="Apply Now" class="btn btn-primary">
+              <div class="submitting"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+      {% endif %}
+      </div>
+      </div>
+  
+{% endblock content %}

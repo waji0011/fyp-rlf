@@ -1,0 +1,289 @@
+{% extends "users/base.html" %}
+{% block title %} upload_video.html {% endblock title%}
+{% block content %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<body>
+  <video id="video" width="640" height="480" autoplay muted></video>
+  <div id="buttons">
+    <button onclick="startRecording()">Start Recording</button>
+  </div>
+  <form id="upload-form" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" class="form-control" name="id2" id2="id2"  value= {{profile.id}}>
+    <input id="video-input" type="file" name="video" accept="video/*" style="display: none;">
+  </form>
+  <script>
+    // code for recording video goes here
+    let stream, recorder, chunks;
+
+      function startRecording() {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+          .then(str => {
+            stream = str;
+            const video = document.getElementById('video');
+            video.srcObject = stream;
+            video.play();
+
+            recorder = new MediaRecorder(stream);
+            chunks = [];
+
+            recorder.ondataavailable = event => chunks.push(event.data);
+            recorder.onstop = () => {
+              const blob = new Blob(chunks, { type: 'video/webm' });
+              const url = window.URL.createObjectURL(blob);
+              const downloadLink = document.createElement('a');
+              downloadLink.href = url;
+              downloadLink.download = 'recorded_video.webm';
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+
+              const formData = new FormData();
+              console.log(blob)
+              formData.append('video', blob, 'recorded_video.webm');
+              console.log(formData)
+
+              const xhr = new XMLHttpRequest();
+              xhr.open('POST', '{% url "upload_video" %}', true);
+              xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+              xhr.send(formData);
+              xhr.onload = () => {
+                if (xhr.status === 200) {
+                  alert('Video uploaded successfully!');
+                  console.log(xhr.responseText);
+                  window.location.href = "{% url 'video' %}";
+                } else {
+                  console.error(xhr.statusText);
+                  alert('Failed to video.');
+                }
+              };
+              
+              xhr.onerror = function() {
+                console.error(xhr.statusText);
+                alert('Failed to upload video.');
+              };
+              };
+
+            // Hide the start recording button
+            const buttons = document.getElementById('buttons');
+            buttons.innerHTML = '';
+
+            // Show the stop recording button
+
+
+            recorder.start();
+          })
+          .catch(error => {
+            console.error(error);
+            alert('Failed to start recording.');
+          });
+      }
+
+    function stopRecording() {
+    recorder.stop();
+    stream.getTracks().forEach(track => track.stop());
+    }
+    startRecording();
+  </script>
+
+  <!-- your theorytest content goes here -->
+  <div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+      <h2 id="question">Question text</h2>
+      <img id="image" src="{% static '' %}" alt="image">
+      <ul>
+        <li>
+          <input type="radio" id="a" name="answer" class="answer" value="a"  />
+          <label id="a_text" for="a">Question</label>
+        </li>
+        <li>
+          <input type="radio" id="b" name="answer" class="answer" value="b"  />
+          <label id="b_text" for="b">Question</label>
+        </li>
+        <li>
+          <input type="radio" id="c" name="answer" class="answer" value="c" />
+          <label id="c_text" for="c">Question</label>
+        </li>
+      </ul>
+    </div>
+    <button id="submit">Submit</button>
+    <div id="timer-container">
+      Timer: <span id="timer">15s</span>
+    </div>
+  </div>
+
+  <script>
+    // code for quiz goes here
+    
+	const quizData = [
+		{
+		question: "What does this sign means?",
+		image: "{% static 'logo/logo 1.jpeg' %}",
+		a: "left stop",
+		b: "no right turn ",
+		c: "right turn ",
+		correct: "b" },
+		
+		{
+		question: "What does this sign means?",
+		image: "{% static 'logo/logo 2.jpeg' %}",
+		a: "Airport ",
+		b: "petrol pump",
+		c: "Strong cross wind",
+		correct: "c" },
+
+    {
+      question: "What does this sign means?",
+      image: "{% static 'logo/logo 3.jpeg' %}",
+      a: "passing police custom post without stopping",
+      b: "custom police ahead ",
+      c: "danger ahead ",
+      correct: "b" },
+      
+      {
+      question: "What does this sign means?",
+      image: "{% static 'logo/logo 4.jpeg' %}",
+      a: "no entry for vehicle exceeding 8 ton on axle",
+      b: "height of bridge 8 feet ",
+      c: "no entry for good vehicle",
+      correct: "a" },
+      {
+      question: "What does this sign means?",
+      image: "{% static 'logo/logo 5.jpeg' %}",
+      a: "overtaking by good veicles prohibited",
+      b: "road closed ",
+      c: "no overtaking ",
+      correct: "a" },
+      {
+        question: "What does this sign means?",
+        image: "{% static 'logo/logo 6.jpeg' %}",
+        a: "no entry for vehicles exceeding 10 meter in width",
+        b: "no entry for vehicles exceeding 10 meter in length",
+        c: "no entry for heavy vehicles",
+        correct: "b" },
+        {
+        question: "What does this sign means?",
+        image: "{% static 'logo/logo 7.jpeg' %}",
+        a: "double bend on the road",
+        b: "damage road",
+        c: "slippery road ",
+        correct: "a" },
+        {
+        question: "What does this sign means?",
+        image: "{% static 'logo/logo 8.jpeg' %}",
+        a: "filling station",
+        b: "first Aid station",
+        c: "telephone",
+        correct: "a" },
+        {
+        question: "What does this sign means?",
+        image: "{% static 'logo/9.jpeg' %}",
+        a: "telephone facility",
+        b: "first aid station",
+        c: "police station",
+        correct: "a" },
+		
+		
+		];
+		
+		const quiz = document.getElementById("quiz");
+		const answerEls = document.querySelectorAll(".answer");
+		const questionEl = document.getElementById("question");
+		const a_text = document.getElementById("a_text");
+		const b_text = document.getElementById("b_text");
+		const c_text = document.getElementById("c_text");
+		const submitBtn = document.getElementById("submit");
+		let countdown; // declare the countdown variable outside the function
+		
+		let currentQuiz = 0;
+		let score = 0;
+		
+    function loadQuiz() {
+      deselectAnswers();
+    
+      // Select 6 random questions from quizData array
+      let randomQuestions = [];
+      while (randomQuestions.length < 6) {
+        let randomIndex = Math.floor(Math.random() * quizData.length);
+        if (!randomQuestions.includes(randomIndex)) {
+          randomQuestions.push(randomIndex);
+        }
+      }
+    
+      const currentQuizData = quizData[randomQuestions[currentQuiz]];
+    
+      questionEl.innerText = currentQuizData.question;
+      a_text.innerText = currentQuizData.a;
+      b_text.innerText = currentQuizData.b;
+      c_text.innerText = currentQuizData.c;
+      image.src = currentQuizData.image;
+    
+      // start 15-second timer
+      let timer = 15;
+      countdown = setInterval(() => { // assign the interval to countdown variable
+        timer--;
+        document.getElementById("timer").innerText = timer;
+        if (timer === 0) {
+          clearInterval(countdown);
+          currentQuiz++;
+          if (currentQuiz < 6) { // Modify the condition to show only 6 questions
+            loadQuiz();
+          } else {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "{% url 'save_score' %}");
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            console.log(JSON.stringify({"score": score}));
+            xhr.send(JSON.stringify({"score": score}));
+            quiz.innerHTML=` <h2>You answered correctly at ${score}/${6} questions.</h2>`;
+            stopRecording();
+            quiz.innerHTML = ` <h2>You answered correctly at ${score}/${6} questions.</h2>
+            `;
+          }
+        }
+      }, 1000);
+    }
+		
+		function getSelected() {
+		let answer = '';
+		answerEls.forEach(answerEl => {
+		if (answerEl.checked) {
+		answer = answerEl.id;
+		}
+		});
+		return answer;
+		}
+		
+		function deselectAnswers() {
+		answerEls.forEach(answerEl => {
+		answerEl.checked = false;
+		});
+		}
+		
+		submitBtn.addEventListener("click", () => {
+      const answer = getSelected();
+      if (answer) {
+        clearInterval(countdown);
+        if (answer === quizData[currentQuiz].correct) {
+          score++;
+        }
+        currentQuiz++;
+        if (currentQuiz < 6) { 
+          loadQuiz(); 
+        } else { 
+          var xhr = new XMLHttpRequest();
+          xhr.open("POST", "{% url 'save_score' %}");
+          xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          console.log(JSON.stringify({"score": score}));
+          xhr.send(JSON.stringify({"score": score}));
+          quiz.innerHTML=` <h2>You answered correctly at ${score}/${6} questions.</h2>`;
+          stopRecording();
+        }
+      }
+    });
+    
+		loadQuiz();
+
+  </script>
+</body>
+{% endblock %}

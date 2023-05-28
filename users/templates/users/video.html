@@ -1,0 +1,82 @@
+{% extends "users/base.html" %}
+
+{% block title %}Apply for License{% endblock title %}
+
+{% block content %}
+<style>
+  .center-align {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    text-align: center;
+  }
+
+  /* Style for the content section */
+  .content-section {
+    background-color: white;
+    border: 1px solid #33b734;
+    border-radius: 50px;
+    padding: 30px;
+    max-width: 620px;
+  }
+
+  .content-section h3 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  .content-section p {
+    margin-bottom: 20px;
+  }
+
+  .content-section a.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #33b734;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+
+</style>
+<br><br>
+<div class="center-align">
+  <div class="content-section">
+    <br><br>
+    {% if profile.Physical_test_passed%}
+    <p>CONGRATULATION</p>
+
+    {% elif profile.has_submitted_video and video.verified %}
+    <p>The applicant should bring the following documents while appearing for practical driving test part-I: </p>
+    <ul>
+      <li>Valid Original CNIC</li>
+      <li>Original Learner Permit</li>
+    </ul> 
+    {% elif profile.has_submitted_video and not video.verified and not video.rejected %}
+      <p>Your video is currently being reviewed by an administrator. Please check back later.</p>
+    {% elif profile.has_submitted_video and video.rejected %}
+    <p>The Sign Test has been rejected. <a href="{% url 'upload_video' %}" class="nav-item nav-link">Click Here</a> to Test again   </p>
+    {% elif profile.has_submitted_registration_form and profile.has_submitted_challan and  not profile.Physical_test_passed and remaining_days < 0 %}
+      <p>You are now eligible for the License.</p><br>
+      <div>
+        <b><a href="{% url 'upload_video' %}" class="btn btn-primary">Apply for test</a></b>
+      </div>
+    {% elif not user.profile.has_submitted_registration_form %}
+      <p>Apply for the Learner first.</p>
+      <div>
+        <b><a href="{% url 'registration' %}" class="btn btn-primary">Click Here to Apply for Learner</a></b>
+      </div>
+    {% elif profile.has_submitted_registration_form and profile.has_submitted_challan and video.verified and remaining_days < 0%}
+      <p>Your bank challan is still being verified. Please check back later.</p>
+    {% elif user.profile.has_submitted_challan and not challan.verified and remaining_days >= 0%}
+      <p>Please wait for {{ remaining_days }} day{% if remaining_days != 1 %}s{% endif %}, {{ remaining_hours }} hour{% if remaining_hours != 1 %}s{% endif %}, and {{ remaining_minutes }} minute{% if remaining_minutes != 1 %}s{% endif %} to be eligible for the License.</p>
+    {% elif not user.profile.has_submitted_challan %}
+    <p>Your paid Challan is Not uplaoded yet.</p><b><a href="{% url 'upload_challan' %}" class="btn btn-primary">Click Here</a></b> <p> To upload Challan</p>
+    
+      {% endif %}
+  </div>
+</div>
+{% endblock %}

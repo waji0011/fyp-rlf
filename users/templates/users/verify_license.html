@@ -1,0 +1,71 @@
+{% extends 'users/base.html' %}
+
+{% block content %}
+<style>
+    .center-align {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 50vh;
+      text-align: center;
+    }
+  
+    /* Style for the content section */
+    .content-section {
+        width: 100%;
+        background-color: white;
+        border: 2px solid #33b734;
+        border-radius: 78px;
+        padding: 31px;
+        max-width: 600px;
+    }
+  
+    .content-section h3 {
+      color: #333;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+  
+    .content-section p {
+      margin-bottom: 20px;
+    }
+  
+    .content-section a.btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #33b734;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+  </style>
+    <br><br>
+    <div class="center-align">
+        <div class="content-section">
+          <br><br>
+          <h2>License Verification</h2>
+          <form method="GET">
+            <input type="text" class="form-control" name="cnic" id="cnic" placeholder="Please Enter Your CNIC with dashes. e.g., (11111-2222222-3)"><br>
+            <button type="submit" class="btn btn-primary">Verify</button>
+          </form>
+      
+          {% if userdata and request.GET.cnic %}
+            {% if userdata != 'None' %}
+              <h3>User Information</h3>
+              <p>Fullname: {{ userdata.Fullname }}</p>
+              <p>Fathername: {{ userdata.Fathername }}</p>
+              <p>CNIC: {{ userdata.cnic }}</p>
+              <p>DOB: {{ userdata.dob }}</p>
+              <!-- Display other user data fields as needed -->
+            {% else %}
+              <p>No user data found for the provided CNIC.</p>
+            {% endif %}
+          {% else %}
+            {% if request.GET.cnic %}
+              <p>No user data found for the provided CNIC.</p>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      {% endblock %}

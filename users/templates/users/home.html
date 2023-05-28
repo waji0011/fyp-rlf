@@ -1,0 +1,49 @@
+{% extends "users/base.html" %}
+{% load static %}
+{% block title %} Home Page {% endblock title%}
+{% block content %}
+<style>
+.fittext {
+    font-size: 30px;
+    line-height: 38px;
+}
+:before, :after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.uppercase {
+    text-transform: uppercase;
+}
+.wite-text {
+    color: #fff;
+}
+.text-center {
+    margin-bottom: 35px;
+}
+.purchase {
+        text-align: center;
+        width: 100%;
+        background-image: url("{% static 'images/bkg_img.jpg' %}");
+        background-attachment: fixed;
+        padding: 100px 0;
+}
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+</style>
+<br>
+        {% include 'users/slider.html' %} 
+        <br><br><br>
+        <div class="section purchase" >
+                <div class="container">
+                                 <h1 style="color: #fff;"> Verify your Driving License</h1>
+                        <!-- Start Buttons -->
+                        <a href="verify_license/" class="btn btn-primary btn-lg">Verify Now</a>
+                </div><!-- .container -->
+            </div>
+
+{% endblock content %}

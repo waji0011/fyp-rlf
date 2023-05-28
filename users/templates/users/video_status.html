@@ -1,0 +1,19 @@
+{% extends "users/base.html" %}
+{% block title %}Video Status{% endblock %}
+{% block content %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if video and video.verified %}
+    <p>Your video has been verified and is now available for viewing.</p>
+    <a href="{% url 'video' %}" class="btn btn-secondary">Go to Video</a>
+  {% elif video %}
+    <p>Your video is currently being reviewed by an administrator. Please check back later.</p>
+  {% else %}
+    <p>Your video has been rejected.</p>
+  {% endif %}
+{% endblock %}

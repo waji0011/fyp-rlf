@@ -1,0 +1,15 @@
+{% load i18n %}
+{% autoescape off %}
+<html>
+<body>
+    <p>{% trans "Hi" %} {{ user.username }},</p>
+    <p>{% trans "Please click the link below to activate your account:" %}</p>
+    <p>
+        <a href="{{ protocol }}://{{ domain }}{% url 'activate' uidb64=uid token=token %}">
+            {% trans "Activate your account" %}
+        </a>
+    </p>
+    <p>{% trans "Thank you for registering!" %}</p>
+</body>
+</html>
+{% endautoescape %}

@@ -1,0 +1,316 @@
+{% extends "users/base.html" %}
+{% block title %} Registration {% endblock title%}
+{% block content %}
+{% load static %}
+	<style>
+		body {
+		background-color: #f5f5f5;
+		font-family: Arial, sans-serif;
+		font-size: 16px;
+		}
+		.image {
+		float:right;
+		width:200px;
+		height:80px;
+	}
+	
+	.quiz-container {
+		margin: 0 auto;
+		text-align: center;
+		max-width: 600px;
+		padding: 20px;
+		background-color: #fff;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		border-radius: 5px;
+	}	
+	.answer{
+		text-align: left;
+
+	}
+	.quiz-header {
+		margin-bottom: 20px;
+	}
+	
+	.quiz-header h2 {
+		margin-top: 0;
+		font-size: 24px;
+		font-weight: normal;
+	}
+	
+	.quiz-header ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	
+	.quiz-header li {
+		margin-bottom: 10px;
+		display: flex;
+		align-items: center;
+	}
+	
+	.quiz-header label {
+		margin-left: 10px;
+		font-size: 18px;
+		cursor: pointer;
+	}
+	
+	.quiz-header input[type="radio"] {
+		display: none;
+	}
+	
+	.quiz-header input[type="radio"] + label:before {
+		content: "";
+		display: inline-block;
+		width: 20px;
+		height: 20px;
+		margin-right: 10px;
+		border: 2px solid #666;
+		border-radius: 50%;
+		vertical-align: middle;
+		text-align: center;
+		line-height: 20px;
+	}
+	
+	.quiz-header input[type="radio"]:checked + label:before {
+		background-color: #666;
+		color: #fff;
+	}
+	
+	#submit {
+		background-color: #4CAF50;
+		color: #fff;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		margin-bottom: 20px;
+		font-size: 18px;
+		transition: background-color 0.3s ease;
+	}
+	
+	#submit:hover {
+		background-color: #3e8e41;
+	}
+	
+
+	.centered-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 9vh; /* Adjust the height as needed */
+    }
+</style>
+
+<body>
+	<br>
+	<h2 style="font-weight: 900;text-align: center;font-size: 2rem;color: #1e660c">Sign Test Videos</h2><br>
+	<div class="centered-button">
+		<a href="https://youtu.be/nX9EdR5rABY" class="btn btn-primary btn-lg" style="border-radius: 48.3rem;padding: 0.5rem 8rem;">Road Signs</a>
+	</div>
+	<div class="centered-button">
+		<a href="https://youtu.be/JQnHx_ETD_E" class="btn btn-primary btn-lg" style="border-radius: 48.3rem;padding: 0.5rem 8rem;" >Confusing Signs</a>
+	</div>
+	
+	<br><h2 style="font-weight: 900;text-align: center;font-size: 2rem;color: #1e660c">Driving License Signs Test Preparation</h2>
+	<p>Are you ready to take your Driving License Theory Test? Then there are some things you need to know before you book your test and take the plunge. This Practice Test for Driving License contains the must-know information you need to focus on to pass your test the first time.
+
+		Practice how to answer questions based on traffic rules and procedures. The test for a driving license is conducted to ensure that candidates can make correct decisions in a variety of situations. These questions start by stating a set of rules and then ask the candidate to apply those rules to specific case situations.</p>
+	<div class="centered-button">
+		<button id="start-button" class="btn btn-primary btn-lg" style="border-radius: 48.3rem;padding: 0.5rem 8rem;">Start Test</button>
+	</div>
+	<div class="quiz-container" id="quiz" style="display: none;">
+		<div class="quiz-header">
+			<h2 id="question">Question text</h2>
+			<ul>
+				<li>
+					<input type="radio" id="a" name="answer" class="answer" />
+					<label id="a_label" for="a">Option A</label>
+					<img id="a_image" src="" alt="" />
+				</li>
+				<li>
+					<input type="radio" id="b" name="answer" class="answer" />
+					<label id="b_label" for="b">Option B</label>
+					<img id="b_image" src="" alt="" />
+				</li>
+				<li>
+					<input type="radio" id="c" name="answer" class="answer" />
+					<label id="c_label" for="c">Option C</label>
+					<img id="c_image" src="" alt="" />
+				</li>
+			</ul>
+		</div>
+		<button id="submit">Submit</button>
+	</div>
+
+	<script>
+		const quizData = [
+		  {
+		    question: "دائیں مڑنا ہو تو موڑ سے تقریباََ (200) میٹر پہلے دائیں لین میں آ جانا چاہیے؟",
+		    a: "معلوم نہیں",
+		    b: "درست",
+		    c: "غلط",
+		    correct: "b"
+		  },
+		  {
+		    question: "ذیل میں کس جگہ اوور ٹیکنگ کی اجازت ہوتی ہے؟",
+		    a: "غیر مسلسل لائن پر",
+		    b: "چوک پر",
+		    c: "پل پر",
+		    correct: "c"
+		  },
+		  {
+		    question: "حد رفتار کا خاتمہ ہے کا اشارہ کونسا ہے؟",
+		    a: "{% static 'Quiz/3-1.png' %}",
+		    b: "{% static 'Quiz/3-2.png' %}",
+		    c: "{% static 'Quiz/3-3.png' %}",
+		    correct: "a"
+		  },
+		  {
+		    question: "چوک میں اوور ٹیکنگ کرنا منع ہوتا ہے ",
+		    a: "معلوم نہیں",
+		    b: "درست",
+		    c: "غلط",
+		    correct: "c"
+		  },
+		  {
+		    question: "سامنے دئیے گئے نشان سے کیا مراد ہے؟",
+		    a: "کراسنگ",
+		    b: "لکیریں",
+		    c: "سٹاپ لائن",
+		    correct: "a"
+		  },
+		  {
+		    question: "اگر پیچھے سے آنے والا ڈرائیور بے جا ہارن بجا رہا ہو تو اسے راستہ نہیں دینا چاہیے؟",
+		    a: "معلوم نہیں",
+		    b: "غلط",
+		    c: "درست",
+		    correct: "a"
+		  },
+		  {
+		    question: "کیا مال مویشی لادنے کے لیے خاص پرمٹ کا ہونا ضروری ہے؟",
+		    a: "معلوم نہیں",
+		    b: "ہاں",
+		    c: "نہیں",
+		    correct: "a"
+		  },
+		  {
+		    question: "سامنے دئیے گئے نشان سے کیا مراد ہے؟",
+		    a: "سٹاپ ",
+		    b: "ہیک طرفہ سڑکاں",
+		    c: "آگے سڑک بند ہے",
+		    correct: "a"
+		  },
+		  {
+		    question: "سامنے دئیے گئے نشان سے کیا مراد ہے؟",
+		    a: "سڑک پر پھسلن ہے",
+		    b: "تیز چڑھائی",
+		    c: "خطرناک اترائی",
+		    correct: "a"
+		  },
+		];
+
+		const quiz = document.getElementById("quiz");
+		const answerEls = document.querySelectorAll(".answer");
+		const questionEl = document.getElementById("question");
+		const aLabelEl = document.getElementById("a_label");
+		const bLabelEl = document.getElementById("b_label");
+		const cLabelEl = document.getElementById("c_label");
+		const aImageElement = document.getElementById('a_image');
+		const bImageElement = document.getElementById('b_image');
+		const cImageElement = document.getElementById('c_image');
+		const submitBtn = document.getElementById("submit");
+		let countdown;
+
+		let currentQuiz = 0;
+		let score = 0;
+		function loadQuiz() {
+			deselectAnswers();
+
+			const currentQuizData = quizData[currentQuiz];
+
+			questionEl.innerText = currentQuizData.question;
+
+			// Check if the options are images or text
+			if (currentQuizData.a.includes('.png')) {
+				aImageElement.src = currentQuizData.a;
+				aLabelEl.innerText = " ";
+				aLabelEl.style.display = 'none';
+				aImageElement.style.display = 'block';
+				aImageElement.previousElementSibling.style.display = 'block';
+			} else {
+				aLabelEl.innerText = currentQuizData.a;
+				aLabelEl.style.display = 'block';
+				aImageElement.style.display = 'none';
+			}
+
+			if (currentQuizData.b.includes('.png')) {
+				bImageElement.src = currentQuizData.b;
+				bLabelEl.innerText = " ";
+				bLabelEl.style.display = 'none';
+				bImageElement.style.display = 'block';
+				bImageElement.previousElementSibling.style.display = 'block';
+			} else {
+				bLabelEl.innerText = currentQuizData.b;
+				bLabelEl.style.display = 'block';
+				bImageElement.style.display = 'none';
+			}
+
+			if (currentQuizData.c.includes('.png')) {
+				cImageElement.src = currentQuizData.c;
+				cLabelEl.innerText = " ";
+				cLabelEl.style.display = 'none';
+				cImageElement.style.display = 'block';
+				cImageElement.previousElementSibling.style.display = 'block';
+			} else {
+				cLabelEl.innerText = currentQuizData.c;
+				cLabelEl.style.display = 'block';
+				cImageElement.style.display = 'none';
+			}
+			}
+
+
+		function getSelected() {
+		  let answer = '';
+		  answerEls.forEach(answerEl => {
+		    if (answerEl.checked) {
+		      answer = answerEl.id;
+		    }
+		  });
+		  return answer;
+		}
+
+		function deselectAnswers() {
+		  answerEls.forEach(answerEl => {
+		    answerEl.checked = false;
+		  });
+		}
+
+		submitBtn.addEventListener("click", () => {
+		  const answer = getSelected();
+		  if (answer) {
+		    if (answer === quizData[currentQuiz].correct) {
+		      score++;
+		    }
+		    currentQuiz++;
+		    if (currentQuiz < quizData.length) {
+		      loadQuiz();
+		    } else {
+		      quiz.innerHTML = `<h2>You answered correctly at ${score}/${quizData.length} questions.</h2>
+		        <button onclick="location.reload()">Reload</button>`;
+		    }
+		  }
+		});
+
+		document.getElementById("start-button").addEventListener("click", function () {
+		  document.getElementById("start-button").style.display = "none";
+		  document.getElementById("quiz").style.display = "block";
+		  loadQuiz();
+		});
+	</script>
+</body>
+
+{% endblock content %}

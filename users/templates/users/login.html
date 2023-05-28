@@ -1,0 +1,95 @@
+{% extends "users/base.html" %}
+{% block title %} Login Page {% endblock title%}
+{% block content %}
+    <div class="form-content my-3 p-3">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-lg mt-0 mb-3">
+                        <div class="card-header justify-content-center">
+                          <h3 class="font-weight-light my-1 text-center">Sign In</h3>
+                        </div>
+                        {% if form.errors %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <div id="form_errors">
+                                    {% for key, value in form.errors.items %}
+                                        <strong>{{ value }}</strong>
+                                    {% endfor %}
+                                </div>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        {% endif %}
+                        <div class="card-body">
+                            <form method="POST" id="login-form">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-10 offset-md-1">
+                                        <div class="form-group">
+                                            <label class="small mb-1">Username</label>
+                                            {{ form.username }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-10 offset-md-1">
+                                        <div class="form-group">
+                                          <label class="small mb-1">Password</label>
+                                          {{ form.password }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-10 offset-md-1">
+                                        <div class="form-group">
+                                            <!-- Add a Remember me functionality -->
+                                            {{ form.remember_me }}
+                                            <label> Remember me</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-md-10 offset-md-1">
+                                        <div class="form-group mt-0 mb-1">
+                                          <button name="login" class="col-md-12 btn btn-dark" id="login">Sign in</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <div class="small">
+                                <b><a href="{% url 'users-register' %}">Don't have an account yet? Register</a><br></b>
+                                <b><a href="{% url 'password_reset' %}"><i>Forgot Password?</i></a></b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+     <script>
+        // Get the form element
+        const loginForm = document.getElementById('login-form');
+
+        // Get the input fields
+        const usernameInput = loginForm.querySelector('#id_username');
+        const passwordInput = loginForm.querySelector('#id_password');
+        const rememberMeInput = loginForm.querySelector('#id_remember_me');
+
+        // Populate the input fields with the previously stored values, if any
+        usernameInput.value = localStorage.getItem('login_username') || '';
+        passwordInput.value = localStorage.getItem('login_password') || '';
+        rememberMeInput.checked = localStorage.getItem('login_remember_me') === 'true';
+
+        // Add an event listener to the form submit event
+        loginForm.addEventListener('submit', () => {
+            // Store the input field values in local storage
+            localStorage.setItem('login_username', usernameInput.value);
+            localStorage.setItem('login_password', passwordInput.value);
+            localStorage.setItem('login_remember_me', rememberMeInput.checked);
+        });
+    </script>
+{% endblock content %}
